@@ -1,0 +1,227 @@
+<div class="topbar">
+  <div class="topbar-brand">
+    <div class="dot"></div> TechSphere <span style="font-weight:400; opacity:0.5; margin: 0 4px">/</span> 2025
+  </div>
+  <div class="theme-toggle">
+    <span class="mat-icon">light_mode</span>
+    <label class="mat-slide-toggle">
+      <input type="checkbox" (change)="toggleTheme()" [checked]="isDarkMode">
+      <div class="mat-slide-toggle-bar"></div>
+      <div class="mat-slide-toggle-thumb"><span class="mat-icon">{{ isDarkMode ? 'dark_mode' : 'light_mode' }}</span></div>
+    </label>
+    <span class="mat-icon">dark_mode</span>
+  </div>
+</div>
+
+<div class="page-wrapper">
+  <div class="page-header">
+    <div class="event-badge"><span class="mat-icon" style="font-size:12px">event</span> August 14–16, 2025 · Manila, PH</div>
+    <h1>Register for<br><span>TechSphere</span> 2025</h1>
+    <p>Join 3,000+ developers, designers & innovators for three days of talks, workshops, and networking.</p>
+  </div>
+
+  <div class="mat-card">
+
+    <ng-container *ngIf="!isSuccess">
+      <div class="mat-stepper">
+        <div class="mat-step" [ngClass]="{'active': currentStep === 1, 'completed': currentStep > 1}" (click)="goToStep(1)">
+          <div class="mat-step-circle"><span class="mat-icon" *ngIf="currentStep > 1">check</span><ng-container *ngIf="currentStep <= 1">1</ng-container></div>
+          <span class="mat-step-label">Personal Info</span>
+        </div>
+        <div class="mat-step-connector" [class.completed]="currentStep > 1"></div>
+        <div class="mat-step" [ngClass]="{'active': currentStep === 2, 'completed': currentStep > 2}" (click)="goToStep(2)">
+          <div class="mat-step-circle"><span class="mat-icon" *ngIf="currentStep > 2">check</span><ng-container *ngIf="currentStep <= 2">2</ng-container></div>
+          <span class="mat-step-label">Event Details</span>
+        </div>
+        <div class="mat-step-connector" [class.completed]="currentStep > 2"></div>
+        <div class="mat-step" [class.active]="currentStep === 3">
+          <div class="mat-step-circle">3</div>
+          <span class="mat-step-label">Account</span>
+        </div>
+      </div>
+      <div style="padding: 0 28px;">
+        <div class="mat-progress-bar">
+          <div class="mat-progress-fill" [style.width]="currentStep === 1 ? '33%' : (currentStep === 2 ? '66%' : '100%')"></div>
+        </div>
+        <div class="progress-label">Step {{ currentStep }} of 3</div>
+      </div>
+    </ng-container>
+
+    <form [formGroup]="regForm">
+
+      <div *ngIf="currentStep === 1 && !isSuccess" formGroupName="step1">
+        <div class="mat-card-header">
+          <div class="mat-card-header-icon"><span class="mat-icon">person</span></div>
+          <div class="mat-card-header-text"><h2>Personal Information</h2><p>Tell us a little about yourself</p></div>
+        </div>
+        <div class="mat-card-content">
+          <div class="section-title">Basic Details</div>
+
+          <div class="form-row">
+            <div class="mat-form-field" [class.has-error]="regForm.get('step1.firstname')?.invalid && regForm.get('step1.firstname')?.touched">
+              <label>First Name *</label>
+              <div class="mat-input-wrapper"><span class="mat-icon">badge</span><input formControlName="firstname" placeholder="e.g. Maria"></div>
+              <div class="mat-error"><span class="mat-icon">error</span> First name is required</div>
+            </div>
+            <div class="mat-form-field" [class.has-error]="regForm.get('step1.lastname')?.invalid && regForm.get('step1.lastname')?.touched">
+              <label>Last Name *</label>
+              <div class="mat-input-wrapper"><span class="mat-icon">badge</span><input formControlName="lastname" placeholder="e.g. Santos"></div>
+              <div class="mat-error"><span class="mat-icon">error</span> Last name is required</div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="mat-form-field" [class.has-error]="regForm.get('step1.email')?.invalid && regForm.get('step1.email')?.touched">
+              <label>Email Address *</label>
+              <div class="mat-input-wrapper"><span class="mat-icon">email</span><input type="email" formControlName="email" placeholder="you@email.com"></div>
+              <div class="mat-error"><span class="mat-icon">error</span> Please enter a valid email</div>
+            </div>
+            <div class="mat-form-field">
+              <label>Phone Number</label>
+              <div class="mat-input-wrapper"><span class="mat-icon">phone</span><input type="tel" formControlName="phone" placeholder="+63 900 000 0000"></div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="mat-form-field" [class.has-error]="regForm.get('step1.dob')?.invalid && regForm.get('step1.dob')?.touched">
+              <label>Date of Birth *</label>
+              <div class="mat-input-wrapper"><span class="mat-icon">cake</span><input type="date" formControlName="dob" max="2006-12-31"></div>
+              <div class="mat-error"><span class="mat-icon">error</span> Must be born in 2006 or earlier</div>
+            </div>
+            <div class="mat-form-field">
+              <label>Gender</label>
+              <div class="mat-input-wrapper select-wrapper">
+                <span class="mat-icon">wc</span>
+                <select formControlName="gender">
+                  <option value="">Select gender</option><option value="m">Male</option><option value="f">Female</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="mat-divider"></div>
+          <div class="section-title">Location</div>
+
+          <div class="form-row triple">
+            <div class="mat-form-field" [class.has-error]="regForm.get('step1.country')?.invalid && regForm.get('step1.country')?.touched">
+              <label>Country *</label>
+              <div class="mat-input-wrapper select-wrapper">
+                <select formControlName="country"><option value="ph">Philippines</option><option value="sg">Singapore</option></select>
+              </div>
+            </div>
+            <div class="mat-form-field" [class.has-error]="regForm.get('step1.city')?.invalid && regForm.get('step1.city')?.touched">
+              <label>City *</label>
+              <div class="mat-input-wrapper"><input formControlName="city" placeholder="e.g. Gapan"></div>
+            </div>
+            <div class="mat-form-field">
+              <label>Organization</label>
+              <div class="mat-input-wrapper"><span class="mat-icon">business</span><input formControlName="org" placeholder="Company / School"></div>
+            </div>
+          </div>
+
+          <div class="mat-button-row"><span></span><button type="button" class="mat-raised-button btn-primary" (click)="nextStep(1)">Continue <span class="mat-icon">arrow_forward</span></button></div>
+        </div>
+      </div>
+
+      <div *ngIf="currentStep === 2 && !isSuccess" formGroupName="step2">
+        <div class="mat-card-header">
+          <div class="mat-card-header-icon"><span class="mat-icon">confirmation_number</span></div>
+          <div class="mat-card-header-text"><h2>Event Preferences</h2></div>
+        </div>
+        <div class="mat-card-content">
+          <div class="section-title">Ticket Type</div>
+          <div class="mat-radio-group">
+            <label class="mat-radio-button"><input type="radio" formControlName="ticket" value="standard"><div class="mat-radio-circle"></div><span>🎫 Standard — Free</span></label>
+            <label class="mat-radio-button"><input type="radio" formControlName="ticket" value="pro"><div class="mat-radio-circle"></div><span>⚡ Pro — ₱499</span></label>
+          </div>
+
+          <div class="mat-divider"></div>
+          <div class="section-title">Tracks & Interests</div>
+          <div class="mat-chip-list-label">Select topics you're interested in (pick up to 4)</div>
+          <div class="mat-chip-list">
+            <div class="mat-chip" *ngFor="let t of availableTopics" [class.selected]="selectedTopics.includes(t.label)" (click)="toggleTopic(t.label)">
+              <span class="mat-icon">{{t.icon}}</span> {{t.label}}
+            </div>
+          </div>
+
+          <div class="mat-divider"></div>
+          <div class="section-title">Add-ons</div>
+          <label class="mat-checkbox"><input type="checkbox" formControlName="workshop"><div class="mat-checkbox-box"><span class="mat-icon">check</span></div><span>Include workshop day access (+₱299)</span></label>
+          <label class="mat-checkbox"><input type="checkbox" formControlName="networking"><div class="mat-checkbox-box"><span class="mat-icon">check</span></div><span>Join networking dinner (₱599)</span></label>
+          <label class="mat-checkbox"><input type="checkbox" formControlName="newsletter"><div class="mat-checkbox-box"><span class="mat-icon">check</span></div><span>Subscribe to newsletter</span></label>
+
+          <div class="mat-button-row" style="margin-top:24px">
+            <button type="button" class="mat-raised-button btn-outline" (click)="prevStep(2)"><span class="mat-icon">arrow_back</span> Back</button>
+            <button type="button" class="mat-raised-button btn-primary" (click)="nextStep(2)">Continue <span class="mat-icon">arrow_forward</span></button>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="currentStep === 3 && !isSuccess" formGroupName="step3">
+        <div class="mat-card-header">
+          <div class="mat-card-header-icon"><span class="mat-icon">lock</span></div>
+          <div class="mat-card-header-text"><h2>Create Account</h2></div>
+        </div>
+        <div class="mat-card-content">
+          <div class="mat-form-field" [class.has-error]="regForm.get('step3.username')?.invalid && regForm.get('step3.username')?.touched">
+            <label>Username *</label>
+            <div class="mat-input-wrapper"><span class="mat-icon">alternate_email</span><input formControlName="username" placeholder="your_handle"></div>
+          </div>
+
+          <div class="form-row">
+            <div class="mat-form-field" [class.has-error]="regForm.get('step3.password')?.invalid && regForm.get('step3.password')?.touched">
+              <label>Password *</label>
+              <div class="mat-input-wrapper">
+                <span class="mat-icon">lock</span>
+                <input [type]="showPassword ? 'text' : 'password'" formControlName="password" placeholder="Create a password">
+                <span class="mat-icon suffix-icon" (click)="showPassword = !showPassword">{{showPassword ? 'visibility' : 'visibility_off'}}</span>
+              </div>
+              <div class="mat-error"><span class="mat-icon">error</span> Invalid password format</div>
+            </div>
+            <div class="mat-form-field" [class.has-error]="regForm.get('step3')?.hasError('mismatch') && regForm.get('step3.confirm')?.touched">
+              <label>Confirm Password *</label>
+              <div class="mat-input-wrapper">
+                <span class="mat-icon">lock_outline</span>
+                <input [type]="showConfirm ? 'text' : 'password'" formControlName="confirm" placeholder="Repeat password">
+                <span class="mat-icon suffix-icon" (click)="showConfirm = !showConfirm">{{showConfirm ? 'visibility' : 'visibility_off'}}</span>
+              </div>
+              <div class="mat-error"><span class="mat-icon">error</span> Passwords do not match</div>
+            </div>
+          </div>
+
+          <div style="background:var(--surface2); border:1px solid var(--border); border-radius:6px; padding:14px; margin-bottom:20px; font-size:0.78rem;">
+            <div style="font-weight:600; margin-bottom:8px">Password requirements:</div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:4px 16px;">
+              <div [class.ok]="isPassValidLen"> {{ isPassValidLen ? '✓' : '✗' }} At least 8 characters</div>
+              <div [class.ok]="isPassValidLetter">{{ isPassValidLetter ? '✓' : '✗' }} Starts with a letter</div>
+              <div [class.ok]="isPassValidAlnum">{{ isPassValidAlnum ? '✓' : '✗' }} Letters and numbers only</div>
+              <div [class.ok]="isPassValidNum">{{ isPassValidNum ? '✓' : '✗' }} Contains a number</div>
+            </div>
+          </div>
+
+          <label class="mat-checkbox" [class.has-error]="regForm.get('step3.terms')?.invalid && regForm.get('step3.terms')?.touched"><input type="checkbox" formControlName="terms"><div class="mat-checkbox-box"><span class="mat-icon">check</span></div><span>I agree to the Terms of Service</span></label>
+          <label class="mat-checkbox" [class.has-error]="regForm.get('step3.ageConfirm')?.invalid && regForm.get('step3.ageConfirm')?.touched"><input type="checkbox" formControlName="ageConfirm"><div class="mat-checkbox-box"><span class="mat-icon">check</span></div><span>I confirm I was born in 2006 or earlier</span></label>
+
+          <div class="mat-button-row" style="margin-top:24px">
+            <button type="button" class="mat-raised-button btn-outline" (click)="prevStep(3)"><span class="mat-icon">arrow_back</span> Back</button>
+            <button type="button" class="mat-raised-button btn-primary" (click)="submitForm()"><span class="mat-icon">rocket_launch</span> Complete Registration</button>
+          </div>
+        </div>
+      </div>
+    </form>
+
+    <div class="success-panel" *ngIf="isSuccess" style="display: block;">
+      <div class="success-icon"><span class="mat-icon">check</span></div>
+      <h3>You're registered! 🎉</h3>
+      <p>Welcome to TechSphere 2025.</p>
+      <div class="ticket-code">{{ ticketCode }}</div>
+      <button class="mat-raised-button btn-primary" (click)="resetApp()">Register Another Attendee</button>
+    </div>
+
+  </div>
+</div>
+
+<div class="mat-snackbar" [class.show]="showSnackbar" [class.snack-success]="isSnackSuccess">
+  <span class="mat-icon">{{ isSnackSuccess ? 'check_circle' : 'warning' }}</span>
+  <span>{{ snackbarMsg }}</span>
+</div>
